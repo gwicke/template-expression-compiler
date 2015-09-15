@@ -1,0 +1,12 @@
+{
+  "name": "template-expressions",
+  "version": "0.1.0",
+  "main": "ExpressionParser.js",
+  "devDependencies": {
+    "mocha": "^2.2.5",
+    "pegjs": "^0.8.0"
+  },
+  "scripts": {
+    "test": "node buildExpressionParser.js && mocha -u exports"
+  }
+}
