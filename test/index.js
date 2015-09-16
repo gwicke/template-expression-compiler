@@ -31,16 +31,28 @@ var testCases = [
     expression: {headers:{"content-type": "$$.default($.request.headers.content-type,'text/html')"}},
     tassembly: "{headers:{'content-type':rc.g.default(rm.request.headers['content-type'],'text/html')}}",
 },
+{
+    name: 'Call a function from the model',
+    expression: "default($.request.headers.content-type,'text/html')",
+    tassembly: "m.default(rm.request.headers['content-type'],'text/html')",
+},
+{
+    name: 'Call a function from the model, complex default value',
+    expression: "default($.request.headers,{content-type: 'text/html', x-forwarded-for: $.request.headers.x-forwarded-for})",
+    tassembly: "m.default(rm.request.headers,{'content-type':'text/html','x-forwarded-for':rm.request.headers['x-forwarded-for']})",
+},
 ];
 
 
-module.exports = {
-    'Parsing': {
-        loop: function() {
-            testCases.forEach(function(testCase) {
-                assert.equal(parser.parse(testCase.expression), testCase.tassembly);
-            });
-        }
-    }
-};
+function runCase(testCase) {
+    assert.equal(parser.parse(testCase.expression), testCase.tassembly);
+}
+var cases = {};
+testCases.forEach(function(tc) {
+    var i = !cases[tc.name] && tc.name || tc.tassembly;
+    cases[i] = runCase.bind(null, tc);
+});
 
+module.exports = {
+    Parsing: cases
+};
