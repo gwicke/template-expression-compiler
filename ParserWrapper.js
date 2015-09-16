@@ -1,3 +1,5 @@
+"use strict";
+
 var parser = require('./ExpressionParser');
 
 // See https://github.com/gwicke/tassembly#model-access-and-expressions
@@ -55,7 +57,11 @@ var defaultOptions = {
 
 function parse(input, options) {
     options = options || defaultOptions;
-    if (!options.ctxMap) { options.ctxMap = defaultOptions.ctxMap; }
+    if (!options.ctxMap) {
+        options.ctxMap = defaultOptions.ctxMap;
+    } else {
+        options.ctxMap = Object.assign(defaultOptions.ctxMap, options.ctxMap);
+    }
     if (!options.stringifyObject) {
         options.stringifyObject = defaultOptions.stringifyObject;
     }

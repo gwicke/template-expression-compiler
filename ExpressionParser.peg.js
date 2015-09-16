@@ -36,7 +36,7 @@ variable = v:varpart vs:(spc '.' vp:varpart { return vp; })*
             res = options.ctxMap[res.substr(1)];
         } else {
             // local model access
-            res = 'm' + res;
+            res = (options.ctxMap['$local'] || 'm') + res;
         }
 
         // remaining path members
