@@ -1,7 +1,7 @@
 {
-  "name": "template-expressions",
-  "version": "0.1.1",
-  "main": "ExpressionParser.js",
+  "name": "template-expression-compiler",
+  "version": "0.1.0",
+  "main": "index.js",
   "devDependencies": {
     "mocha": "^2.2.5",
     "pegjs": "^0.9.0"
