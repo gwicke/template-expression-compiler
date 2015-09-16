@@ -28,45 +28,48 @@ expression = variable / object / string / number
 
 variable = v:varpart vs:(spc '.' vp:varpart { return vp; })*
     {
-        var vars = [v].concat(vs),
-            res = vars[0];
+        var res = v;
+        var vars = [v].concat(vs);
         // Rewrite the first path component
-        if (res[0] === '$') {
-            if (options.ctxMap[res]) {
-                // Built-in context var access
-                res = options.ctxMap[res];
-            } else {
-                // local model access
-                res = 'm.' + res;
-            }
+        if (res[1] === '$' && options.ctxMap[res.substr(1)]) {
+            // Built-in context var access
+            res = options.ctxMap[res.substr(1)];
         } else {
             // local model access
-            res = 'm.' + res;
+            res = 'm' + res;
         }
 
         // remaining path members
         for (var i = 1, l = vars.length; i < l; i++) {
             var v = vars[i];
-            if (/^\$/.test(v)
-                    && (vars[i-1] === '$parentContext'
-                        || vars[i-1] === '$context')
+            if (/^\.\$/.test(v)
+                    && (vars[i-1] === '.$parentContext'
+                        || vars[i-1] === '.$context')
                 )
             {
                 // only rewrite if previous path element can be a context
-                res += '.' + (options.ctxMap[v] || v);
+                res += (options.ctxMap[v.substr(1)] && '.' + options.ctxMap[v.substr(1)]
+                        || v);
             } else {
-                res += '.' + v;
+                res += v;
             }
         }
 
-        // Escape
-        return res.replace(/\.([^.[(]*(?:-[^.[(]*)+)(?=[\(\.\[]|$)/g, function(all, paren) {
-            return "['" + paren.replace(/'/g, "\\'") + "']";
-        });
+        return res;
     }
 
-varpart = vn:varname r:arrayref? c:call?
-    { return vn + (r || '') + (c || ''); }
+varpart = vs:varpart_segment r:arrayref? c:call?
+    { return vs + (r || '') + (c || ''); }
+
+varpart_segment = vs:$([a-z_$]i [a-z0-9_$-]i*)
+    {
+        // Encode hyphenated segments as array dereferences
+        if (/-/.test(vs)) {
+            return "['" + vs.replace(/'/g, "\\'") + "']";
+        } else {
+            return '.' + vs;
+        }
+    }
 
 varname = $([a-z_$]i [a-z0-9_$-]i*)
 
