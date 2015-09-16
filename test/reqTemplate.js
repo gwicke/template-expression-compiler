@@ -1,6 +1,6 @@
 "use strict";
 
-var Template = require('../reqTEmplate');
+var Template = require('../reqTemplate');
 var URI = require('swagger-router').URI;
 var assert = require('./util/assert');
 
