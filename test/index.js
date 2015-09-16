@@ -16,8 +16,16 @@ var testCases = [
     tassembly: "{res:m['foo-bar'].baz,foo:'bar'}",
 },
 {
-    expression: '$.headers.content-type',
-    tassembly: "rc.g.headers['content-type']",
+    expression: '$.request.headers.content-type',
+    tassembly: "rm.request.headers['content-type']",
+},
+{
+    expression: {headers:{'content-type': '$.request.headers.content-type'}},
+    tassembly: "{headers:{'content-type':rm.request.headers['content-type']}}",
+},
+{
+    expression: {headers:{"content-type": "$$.default($.request.headers.content-type,'text/html')"}},
+    tassembly: "{headers:{'content-type':rc.g.default(rm.request.headers['content-type'],'text/html')}}",
 },
 ];
 

@@ -32,10 +32,7 @@ variable = v:varpart vs:(spc '.' vp:varpart { return vp; })*
             res = vars[0];
         // Rewrite the first path component
         if (res[0] === '$') {
-            if (res === '$') {
-                // user-defined global context access
-                res = 'rc.g';
-            } else if (options.ctxMap[res]) {
+            if (options.ctxMap[res]) {
                 // Built-in context var access
                 res = options.ctxMap[res];
             } else {
@@ -62,7 +59,8 @@ variable = v:varpart vs:(spc '.' vp:varpart { return vp; })*
             }
         }
 
-        return res.replace(/\.([^.]*(?:-[^.]*)+)/g, function(all, paren) {
+        // Escape
+        return res.replace(/\.([^.[(]*(?:-[^.[(]*)+)(?=[\(\.\[]|$)/g, function(all, paren) {
             return "['" + paren.replace(/'/g, "\\'") + "']";
         });
     }

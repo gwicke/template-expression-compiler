@@ -1,7 +1,8 @@
 var parser = require('./ExpressionParser');
 
+// See https://github.com/gwicke/tassembly#model-access-and-expressions
 var ctxMap = {
-    '$': 'rc.g',
+    '$': 'rm', // Normally rc.g, but this works better for RESTBase
     '$data': 'm',
     '$root': 'rm',
     '$parent': 'pm',
@@ -9,7 +10,9 @@ var ctxMap = {
     '$parentContext': 'pc',
     '$index': 'i',
     '$context': 'c',
-    '$rawData': 'd'
+    '$rawData': 'd',
+    // RESTBase specific mappings
+    '$$': 'rc.g',
 };
 
 function stringifyObject (obj) {
