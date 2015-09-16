@@ -105,6 +105,13 @@ function compileTemplate(templateSpec, setValue, reqPart) {
                 return val || defVal;
             },
             merge: function(destination, source) {
+                destination = destination || {};
+                source = source || {};
+
+                if (typeof destination !== 'object' || typeof source !== 'object') {
+                    throw new Error('Illegal spec. Merge source and destination must be objects');
+                }
+
                 var result = Object.assign({}, destination);
                 Object.keys(source).forEach(function(keyName) {
                     if (result[keyName] === undefined) {
