@@ -17,7 +17,7 @@ var ctxMap = {
 };
 
 function makeCtxMatcher(map) {
-    var reSrc = '^\.(?:' + Object.keys(map)
+    var reSrc = '^\\.(?:' + Object.keys(map)
             .map(function(item) {
                 return item.replace(/\$/g, '\\$');
             })
@@ -92,5 +92,6 @@ function parse(input, options) {
 
 module.exports = {
     parse: parse,
+    stringify: stringifyObject,
 };
 

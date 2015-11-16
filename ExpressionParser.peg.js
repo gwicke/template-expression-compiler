@@ -48,6 +48,7 @@ variable = v:varpart vs:(spc '.' vp:varpart { return vp; })*
         }
 
         // remaining path members
+        // TODO: Really fix this.
         for (var i = 1, l = vars.length; i < l; i++) {
             var v = vars[i];
             if (/^\.\$/.test(v)
@@ -56,7 +57,7 @@ variable = v:varpart vs:(spc '.' vp:varpart { return vp; })*
                 )
             {
                 // only rewrite if previous path element can be a context
-                res += (options.ctxMap[v.substr(1)] && '.' + options.ctxMap[v.substr(1)]
+                res += (options._ctxMatcher(vars[i-1]) && '.' + options.ctxMap[v.substr(1)]
                         || v);
             } else {
                 res += v;
