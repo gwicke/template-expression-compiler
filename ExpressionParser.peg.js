@@ -27,19 +27,24 @@ object = '{' spc kvs:key_values spc '}'
 array = '[' spc e:expression es:(spc ',' spc ee:expression { return ee; })* spc ']'
     { return [e].concat(es); }
 
-expression = variable / object / array / number / string
+expression = spc v:(variable / object / array / number / string) spc
+    { return v; }
 
 variable = v:varpart vs:(spc '.' vp:varpart { return vp; })*
     {
         var res = v;
         var vars = [v].concat(vs);
         // Rewrite the first path component
-        if (res[1] === '$' && options.ctxMap[res.substr(1)]) {
+        if (options._ctxMatcher(v)) {
             // Built-in context var access
             res = options.ctxMap[res.substr(1)];
+        } else if (vs.length && options.dottedPathPrefix) {
+            res = options.dottedPathPrefix + res;
+        } else if (!vs.length && /\)$/.test(v) && options.callPrefix) {
+            res = options.callPrefix + res;
         } else {
             // local model access
-            res = 'm' + res;
+            res = (options.modelPrefix || 'm') + res;
         }
 
         // remaining path members
@@ -62,7 +67,9 @@ variable = v:varpart vs:(spc '.' vp:varpart { return vp; })*
     }
 
 varpart = vs:varpart_segment r:arrayref? c:call?
-    { return vs + (r || '') + (c || ''); }
+    {
+        return vs + (r || '') + (c || '');
+    }
 
 varpart_segment = vs:$([a-z_$]i [a-z0-9_$-]i*)
     {
