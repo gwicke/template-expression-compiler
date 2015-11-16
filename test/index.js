@@ -100,6 +100,11 @@ var restBaseCases = [
         expression: 'foo().bar.baz',
         tassembly: 'rc.g.foo().bar.baz',
     },
+    {
+        name: 'Not a dotted path',
+        expression: 'foo-bar',
+        tassembly: "m['foo-bar']",
+    },
 ];
 
 var restBaseOptions = {

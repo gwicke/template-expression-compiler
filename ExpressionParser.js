@@ -74,7 +74,9 @@ module.exports = (function() {
                     res = options.ctxMap[res.substr(1)];
                 } else if (/\)$/.test(v) && options.callPrefix) {
                     res = options.callPrefix + res;
-                } else if ((vs.length || /\]$/.test(v)) && options.dottedPathPrefix) {
+                } else if ((vs.length || /^[^\[]+\[.*\]$/.test(v)) && options.dottedPathPrefix) {
+                    // Either a dotted path, or a variable followed by array
+                    // dereference.
                     res = options.dottedPathPrefix + res;
                 } else {
                     // local model access
