@@ -85,6 +85,21 @@ var restBaseCases = [
         expression: ' some.foo( bar( some.foo( baz( ) ) ) ) ',
         tassembly: 'rm.some.foo(rc.g.bar(rm.some.foo(rc.g.baz())))',
     },
+    {
+        name: 'Bracket path & call',
+        expression: 'some[bar].foo()',
+        tassembly: 'rm.some[m.bar].foo()',
+    },
+    {
+        name: 'Simple call',
+        expression: 'foo()',
+        tassembly: 'rc.g.foo()',
+    },
+    {
+        name: 'Simple call plus dotted path',
+        expression: 'foo().bar.baz',
+        tassembly: 'rc.g.foo().bar.baz',
+    },
 ];
 
 var restBaseOptions = {

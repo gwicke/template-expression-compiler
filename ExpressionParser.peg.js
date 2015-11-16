@@ -38,10 +38,10 @@ variable = v:varpart vs:(spc '.' vp:varpart { return vp; })*
         if (options._ctxMatcher(v)) {
             // Built-in context var access
             res = options.ctxMap[res.substr(1)];
-        } else if (vs.length && options.dottedPathPrefix) {
-            res = options.dottedPathPrefix + res;
-        } else if (!vs.length && /\)$/.test(v) && options.callPrefix) {
+        } else if (/\)$/.test(v) && options.callPrefix) {
             res = options.callPrefix + res;
+        } else if ((vs.length || /\]$/.test(v)) && options.dottedPathPrefix) {
+            res = options.dottedPathPrefix + res;
         } else {
             // local model access
             res = (options.modelPrefix || 'm') + res;
