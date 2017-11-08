@@ -38,17 +38,18 @@ function stringifyObject (obj) {
             keys = Object.keys(obj);
         for (var i = 0; i < keys.length; i++) {
             var key = keys[i];
-            if (obj[key] !== undefined && obj[key] !== null) {
-                if (i !== 0) {
-                    res += ',';
-                }
-                if (/^[a-z_$][a-z0-9_$]*$/.test(key)) {
-                    res += key + ':';
-                } else {
-                    res += "'" + key.replace(/'/g, "\\'") + "':";
-                }
-                res += stringifyObject(obj[key]);
+            if (obj[key] === undefined || obj[key] === null) {
+                continue;
             }
+            if (i !== 0) {
+                res += ',';
+            }
+            if (/^[a-z_$][a-z0-9_$]*$/.test(key)) {
+                res += key + ':';
+            } else {
+                res += "'" + key.replace(/'/g, "\\'") + "':";
+            }
+            res += stringifyObject(obj[key]);
         }
         res += '}';
         return res;
